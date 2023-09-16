@@ -70,7 +70,7 @@ class NotepadApp:
         self.root.bind_all("<Control-q>", lambda event: self.exit_app())
         self.root.bind_all("<Control-x>", lambda event: self.cut())
         self.root.bind_all("<Control-c>", lambda event: self.copy())
-        self.root.bind_all("<Control-v>", lambda event: self.paste())
+        self.root.bind_all("<Control-v>", lambda event: self.paste)
         self.root.bind_all("<Control-z>", lambda event: self.undo())
         self.root.bind_all("<Control-f>", lambda event: self.change_font())
         self.root.bind_all("<Control-Shift-C>", lambda event: self.change_font_color())
@@ -118,10 +118,10 @@ class NotepadApp:
                 return
         file_path = filedialog.askopenfilename(filetypes=[("Text Files", "*.txt"), ("All Files", "*.*")])
         if file_path:
-            with open(file_path, "r") as file:
+            with open(file_path, "r+") as file:
                 content = file.read()
                 self.text_area.delete(1.0, tk.END)
-                self.text_area.insert(tk.END, content)
+                self.text_area.insert(1.0, content)
                 self.root.title(os.path.basename(file_path) + " - Notepad")
                 self.modified = False
                 self.update_title()
@@ -138,8 +138,8 @@ class NotepadApp:
             self.save_file_as()
         else:
             content = self.text_area.get(1.0, tk.END)
-            file_path = self.root.title().replace("*", "").replace(" - Notepad", "")
-            with open(file_path, "w") as file:
+            self.root.title().replace("*", "").replace(" - Notepad", "")
+            with open(file_path, "w+") as file:
                 file.write(content)
             self.modified = False
             self.update_title()
